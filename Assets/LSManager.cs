@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LSManager : MonoBehaviour
 {
@@ -11,24 +12,47 @@ public class LSManager : MonoBehaviour
     public GameObject signUp;
     public GameObject forgotPassword;
 
-    // Use this for initialization
-    void Start()
-    {
+    public Text createUserText;
+    public Text createEmailText;
+    public Text createPasswordText;
+    public string userName, eMail, passWord;
 
+    public void BackToMenu()
+    {
+        showSignUp = false;
+        showForgotPassword = false;
+        userName = "";
+        eMail = "";
+        passWord = "";
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SubmitUser()
     {
-
+        Debug.Log("Sending");
+        userName = createUserText.text;
+        eMail = createEmailText.text;
+        passWord = createPasswordText.text;
+        StartCoroutine(CreateAccount(userName, eMail, passWord));
     }
 
-    public void ShowSignUp()
+    IEnumerator CreateAccount(string username, string email, string password)
+    {
+        string createUserURL = "http://localhost/loginsystem/insertuser.php";
+        WWWForm user = new WWWForm();
+        user.AddField("username_Post", username);
+        user.AddField("email_Post", email);
+        user.AddField("password_Post", password);
+        WWW www = new WWW(createUserURL, user);
+        yield return www;
+        Debug.Log(www.text);
+    }
+
+    public void SignUp()
     {
         ToggleSignUp();
     }
 
-    public void ShowForgotPassword()
+    public void ForgotPassword()
     {
         ToggleForgotPassword();
     }
@@ -68,4 +92,5 @@ public class LSManager : MonoBehaviour
             return true;
         }
     }
+    //NOTIFY if create user BackToMenu();
 }
